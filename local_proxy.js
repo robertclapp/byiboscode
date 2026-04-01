@@ -97,7 +97,10 @@ function convertResponse(openaiResponse) {
     for (const tc of message.tool_calls) {
       let input = {};
       try { input = JSON.parse(tc.function.arguments || '{}'); } catch {}
-      if (Object.keys(input).length === 0) continue;
+      if (Object.keys(input).length === 0) {
+        console.log(`  ⚠ Empty arguments, skipped tool call: ${tc.function.name}`);
+        continue;
+      }
       content.push({
         type: 'tool_use',
         id: tc.id || `tool_${Date.now()}`,
